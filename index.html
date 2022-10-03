@@ -1,200 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>three.js mk-2</title>
+		<title>three.js webgl - geometry - cube</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="index.css" rel="stylesheet" type="text/css" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="index.css">
 	</head>
 	<body>
-        
+
 		<!-- Import maps polyfill -->
 		<!-- Remove this when import maps will be widely supported -->
 		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-         
-        <script type="importmap">
-            {
-                "imports": {
+
+		<script type="importmap">
+			{
+				"imports": {
                     "three": "./three.js-master/build/three.module.js",
-                    "three/examples/jsm/controls/OrbitControls":"./three.js-master/examples/jsm/controls/OrbitControls.js",
-                    "three/examples/jsm/loaders/ColladaLoader":"./three.js-master/examples/jsm/loaders/ColladaLoader.js"
-                }
-            }
-        </script>
-        <script type="module" defer>
-            import * as THREE from 'three';
-            import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-            import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
+					"three/addons/": "./three.js-master/examples/jsm/"
+				}
+			}
+		</script>
 
-            class App{
-                constructor() {
-                    const divContainer = document.querySelector("#webgl-container");   // id가 webgl-container인 div를 가져와서 divContainer로 저장
-                    this._divContainer = divContainer;  //다른 method에서도 불러올 수 있도록 this 설정
+		<script type="module">
 
-                    const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true}); 
-                    //배경 검정으로 하고 aplpha : true로 투명화+css에서 배경 그라디언트
-                    renderer.setPixelRatio(window.devicePixelRatio);
-                    divContainer.appendChild(renderer.domElement); //캔버스 형식의 돔객체
-                    this._renderer=renderer;
-                    this._renderer.setSize(window.innerWidth,window.innerHeight);
-                    
+			import * as THREE from 'three';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
 
+			let camera, controls, scene, renderer;
+			let mesh, building;
 
-                    //collada 로드
+			init();
+			animate();
 
-                    // const loadingManager = new THREE.LoadingManager( function () {
-                    //     scene.add( object3D );
-                    // } );
+			function init() {
+                scene = new THREE.Scene();
 
-                    // const loader = new ColladaLoader();
-                    // loader.load('TEST2.dae',  function ( collada ) {
-                    //     const avatar = collada.scene;
-                    //     scene.add( avatar );
-                    // } );
+                renderer = new THREE.WebGLRenderer({antialias:true, alpha:true}); 
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
 
-                    //scene 필드 의
-                    const scene = new THREE.Scene();
-                    this._scene = scene;
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
+				camera.position.set( 2, 1, 5 );
 
-                    this._setupCamera();
-                    this._setupLight();
-                    this._setupModel();
-                    this._setupControls();
-                    this._setupBackground();
+				const light = new THREE.DirectionalLight( 0xaabbff, 5 );
+				light.position.x = -30;
+				light.position.y = 25;
+				light.position.z = -50;
+				scene.add( light );
 
-                    window.onresize = this.resize.bind(this);  //창의 크기가 바뀌면 렌더와 카메라가 다시 잡혀야해서 리사이즈 사용
-                    this.resize;
+                const dirLightHelper = new THREE.DirectionalLightHelper( light, 0.5 );
+				scene.add( dirLightHelper );
 
-                    requestAnimationFrame(this.render.bind(this));
+                const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+				// hemiLight.color.setHSL( 0.6, 1, 0.6 );
+				// hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+				hemiLight.position.set( 0, 30, 0 );
+				scene.add( hemiLight );
 
-                }
-
-                _setupCamera() {
-                    const camera = new THREE.PerspectiveCamera(
-                        75, 
-                        window.innerWidth / window.innerHeight, 
-                        0.1, 
-                        100
-                    );
-
-                    camera.position.z = 2;
-                    this._camera = camera;
-
-                    this._scene.add(this._camera);
-                }
+				const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
+				scene.add( hemiLightHelper );
 
 
-                _setupControls() {
-                    new OrbitControls(this._camera, this._divContainer);
-                    window.addEventListener('resize',onWindowResize);
-                    function onWindowResize() {
+                controls = new OrbitControls( camera, renderer.domElement );
+                controls.update();
 
-                        camera.aspect = window.innerWidth / window.innerHeight;
-                        camera.updateProjectionMatrix();
-                    
-                        renderer.setSize( window.innerWidth, window.innerHeight );
-                    
-                    }
-                }
+				const loadingManager = new THREE.LoadingManager( function () {
+                        scene.add( building );
+                       } );
 
-                _setupBackground() {
-                    // 배경색+안개 설정
-                    // this._scene.background = new THREE.Color("#ffffff");
-                    // this._scene.fog = new THREE.Fog("#ffffff",20,100);
-                    // this._scene.fog = new THREE.FogExp2("#ffffff",0.1);
+                const loader = new ColladaLoader(loadingManager );
+                      loader.load('TEST2.dae', function ( collada ) {
+                         building = collada.scene;
+                         });
 
-                    //그리드 정
-                    const grid = new THREE.GridHelper( 100, 10, 0x000000, 0x000000 );
-                    grid.material.opacity = 0.2;
-                    grid.material.transparent = true;
-                    this._scene.add( grid );
-                }
+				//
 
-                _setupLight() {
-                    const color = 0xffffff;
-                    const intensity = 3;
-                    const light = new THREE.DirectionalLight(color, intensity);
-                    light.position.set(5,22,4);
-                    this._scene.add(light);
-                }
+				window.addEventListener( 'resize', onWindowResize );
 
-                _zoomFit(object3D, camera, viewMode, bFront) {
-                    const box = new THREE.Box3().setFromObject(object3D);
-                    const sizeBox = box.getSize(new THREE.Vector3()).length();
-                    const centerBox = box.getCenter(new THREE.Vector3());
+			}
 
-                    let offsetX = 0, offsetY = 0, offsetZ = 0;
-                    viewMode === "X" ? offsetX = 1 : (viewMode === "Y") ? 
-                        offsetY = 1 : offsetZ = 1;
-                        
-                    if(!bFront) {
-                        offsetX *= -1;
-                        offsetY *= -1;
-                        offsetZ *= -1;
-                    }
-                    camera.position.set(
-                        centerBox.x + offsetX, centerBox.y + offsetY, centerBox.z + offsetZ);
+			function onWindowResize() {
 
-                        const halfSizeModel = sizeBox * 0.5;
-                    // const halfFov = THREE.Math.degToRad(camera.fov * 0.5);
-                    const halfFov = camera.fov;
-                    const distance = halfSizeModel / Math.tan(halfFov);
-                    const direction = (new THREE.Vector3()).subVectors(
-                        camera.position, centerBox).normalize();
-                    const position = direction.multiplyScalar(distance).add(centerBox);
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
 
-                    camera.position.copy(position);
-                    camera.near = sizeBox / 100;
-                    camera.far = sizeBox * 100;
+				renderer.setSize( window.innerWidth, window.innerHeight );
 
-                    camera.updateProjectionMatrix();
+			}
 
-                    camera.lookAt(centerBox.x, centerBox.y, centerBox.z);
-                    // this._controls.target.set(centerBox.x, centerBox.y, centerBox.z);
-                }  
+			function animate() {
 
-                _setupModel() {      
-                    const loader = new ColladaLoader();
-                    loader.load('TEST2.dae', object => {
-                        const loadcollada = object.scene;
-                        this._scene.add(loadcollada);
+				requestAnimationFrame( animate );
 
-                        this._zoomFit(loadcollada, this._camera, "X", true);
-                    } ); 
-                }
+				// mesh.rotation.x += 0.005;
+				// mesh.rotation.y += 0.01;
+                controls.update();
 
-                resize() {
-                    const width = this._divContainer.clientWidth;
-                    const height = this._divContainer.clientHeight;
+				renderer.render( scene, camera );
 
-                    this._camera.aspect = width/height;
-                    this._camera.updateProjectionMatrix();
+			}
 
-                    this._renderer.setSize(window.innerWidth,window.innerHeight);
-                }
+		</script>
 
-                render(time) {
-                    this._renderer.render(this._scene, this._camera);
-                    this.update(time);
-                    requestAnimationFrame(this.render.bind(this));  //렌덤 매서드 반복
-                    
-                }
-
-                update(time) {
-                    time *=0.001;
-                    // this._cube.rotation.x=time;
-                    // this._cube.rotation.y=time;
-                }
-            }
-
-
-            window.onload=function() {
-                new App();
-            }
-            //window.onload : 순서대로 실행되는 프로래밍 작동방식과 충돌하지 않기 위해 항상 마지막에 실행 되도록 설정하는 코드
-        </script>   <!--defer를 포함하므로 페이지의 코드가 모두 실행된 뒤 마지막에 자바 실행-->
-
-        <div id="webgl-container"></div>
-
-    </body>
+	</body>
 </html>
