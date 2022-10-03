@@ -32,6 +32,7 @@
 
 			init();
 			animate();
+			zoomFit(building, camera, "X", true);
 
 			function init() {
                 scene = new THREE.Scene();
@@ -75,6 +76,10 @@
                          building = collada.scene;
                          });
 
+
+
+				
+
 				//
 
 				window.addEventListener( 'resize', onWindowResize );
@@ -89,6 +94,43 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
+
+			function zoomFit(object3D, camera, viewMode, bFront) {
+
+				
+				const box = new THREE.Box3().setFromObject(object3D);
+				const sizeBox = box.getSize(new THREE.Vector3()).length();
+				const centerBox = box.getCenter(new THREE.Vector3());
+
+				let offsetX = 0, offsetY = 0, offsetZ = 0;
+				viewMode === "X" ? offsetX = 1 : (viewMode === "Y") ? 
+					offsetY = 1 : offsetZ = 1;
+					
+				if(!bFront) {
+					offsetX *= -1;
+					offsetY *= -1;
+					offsetZ *= -1;
+				}
+				camera.position.set(
+					centerBox.x + offsetX, centerBox.y + offsetY, centerBox.z + offsetZ);
+
+					const halfSizeModel = sizeBox * 0.5;
+				// const halfFov = THREE.Math.degToRad(camera.fov * 0.5);
+				const halfFov = camera.fov;
+				const distance = halfSizeModel / Math.tan(halfFov);
+				const direction = (new THREE.Vector3()).subVectors(
+					camera.position, centerBox).normalize();
+				const position = direction.multiplyScalar(distance).add(centerBox);
+
+				camera.position.copy(position);
+				camera.near = sizeBox / 100;
+				camera.far = sizeBox * 100;
+
+				camera.updateProjectionMatrix();
+
+				camera.lookAt(centerBox.x, centerBox.y, centerBox.z);
+				// this._controls.target.set(centerBox.x, centerBox.y, centerBox.z);
+			}  
 
 			function animate() {
 
