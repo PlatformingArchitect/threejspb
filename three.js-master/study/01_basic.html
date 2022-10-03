@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>three.js</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="01_basic.css" rel="stylesheet" type="text/css" />
+
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "../build/three.module.js",
+                    "three/examples/jsm/controls/OrbitControls":"../examples/jsm/controls/OrbitControls.js",
+                    "three/examples/jsm/loaders/ColladaLoader":"../examples/jsm/loaders/ColladaLoader.js"
+                }
+            }
+        </script>
+
+        <script type="module" src="01_basic.js" defer></script>   <!--defer를 포함하므로 페이지의 코드가 모두 실행된 뒤 마지막에 자바 실행-->
+	</head>
+	<body>
+        <div id="webgl-container"></div>
+    </body>
+</html>
