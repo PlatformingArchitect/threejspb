@@ -32,7 +32,7 @@
 
 			init();
 			animate();
-			zoomFit(building, camera, "X", true);
+			zoomFit();
 
 			function init() {
                 scene = new THREE.Scene();
@@ -43,16 +43,17 @@
 				document.body.appendChild( renderer.domElement );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-				camera.position.set( 2, 1, 5 );
+				camera.position.set( 0,5,50 );
+				// camera.position.z=2;
 
-				const light = new THREE.DirectionalLight( 0xaabbff, 5 );
+				const light = new THREE.DirectionalLight( 0xaabbff, 0.5);
 				light.position.x = -30;
 				light.position.y = 25;
 				light.position.z = -50;
 				scene.add( light );
 
                 const dirLightHelper = new THREE.DirectionalLightHelper( light, 0.5 );
-				scene.add( dirLightHelper );
+				// scene.add( dirLightHelper );
 
                 const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
 				// hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -61,7 +62,7 @@
 				scene.add( hemiLight );
 
 				const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
-				scene.add( hemiLightHelper );
+				// scene.add( hemiLightHelper );
 
 
                 controls = new OrbitControls( camera, renderer.domElement );
@@ -72,18 +73,20 @@
                        } );
 
                 const loader = new ColladaLoader(loadingManager );
-                      loader.load('TEST2.dae', function ( collada ) {
+                      loader.load('TEST.dae', function ( collada ) {
                          building = collada.scene;
                          });
 
 
-
 				
-
-				//
-
+				const grid = new THREE.GridHelper( 100, 10, 0x000000, 0x000000 );
+                    grid.material.opacity = 0.2;
+                    grid.material.transparent = true;
+                    scene.add( grid );
+                
 				window.addEventListener( 'resize', onWindowResize );
-
+				
+						 	
 			}
 
 			function onWindowResize() {
@@ -95,24 +98,15 @@
 
 			}
 
-			function zoomFit(object3D, camera, viewMode, bFront) {
+			function zoomFit() {
 
-				
-				const box = new THREE.Box3().setFromObject(object3D);
+				building=collada.Scene;
+				const box = new THREE.Box3().setFromObject(loadingManager);
 				const sizeBox = box.getSize(new THREE.Vector3()).length();
 				const centerBox = box.getCenter(new THREE.Vector3());
 
-				let offsetX = 0, offsetY = 0, offsetZ = 0;
-				viewMode === "X" ? offsetX = 1 : (viewMode === "Y") ? 
-					offsetY = 1 : offsetZ = 1;
-					
-				if(!bFront) {
-					offsetX *= -1;
-					offsetY *= -1;
-					offsetZ *= -1;
-				}
-				camera.position.set(
-					centerBox.x + offsetX, centerBox.y + offsetY, centerBox.z + offsetZ);
+				// camera.position.set(
+				// 	centerBox.x, centerBox.y, centerBox.z);
 
 					const halfSizeModel = sizeBox * 0.5;
 				// const halfFov = THREE.Math.degToRad(camera.fov * 0.5);
