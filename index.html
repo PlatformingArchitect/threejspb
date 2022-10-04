@@ -70,6 +70,33 @@
 
 				const loadingManager = new THREE.LoadingManager( function () {
                         scene.add( building );
+						// scene.add( new THREE.BoxHelper( building ) );
+
+						const box = new THREE.Box3().setFromObject(building);
+						const sizeBox = box.getSize(new THREE.Vector3()).length();
+						const centerBox = box.getCenter(new THREE.Vector3());
+
+						camera.position.set(
+							centerBox.x, centerBox.y, centerBox.z+1);
+
+							const halfSizeModel = sizeBox * 2;
+						// const halfFov = THREE.Math.degToRad(camera.fov * 0.5);
+						const halfFov = camera.fov;
+						const distance = halfSizeModel / Math.tan(halfFov);
+						const direction = (new THREE.Vector3()).subVectors(
+							camera.position, centerBox).normalize();
+						const position = direction.multiplyScalar(distance).add(centerBox);
+
+						camera.position.copy(position);
+						camera.near = sizeBox / 100;
+						camera.far = sizeBox * 100;
+
+						camera.updateProjectionMatrix();
+
+						camera.lookAt(centerBox.x, centerBox.y, centerBox.z);
+						controls.target.set(centerBox.x, centerBox.y, centerBox.z);
+					
+
                        } );
 
                 const loader = new ColladaLoader(loadingManager );
@@ -98,33 +125,6 @@
 
 			}
 
-			function zoomFit() {
-
-				building=collada.Scene;
-				const box = new THREE.Box3().setFromObject(loadingManager);
-				const sizeBox = box.getSize(new THREE.Vector3()).length();
-				const centerBox = box.getCenter(new THREE.Vector3());
-
-				// camera.position.set(
-				// 	centerBox.x, centerBox.y, centerBox.z);
-
-					const halfSizeModel = sizeBox * 0.5;
-				// const halfFov = THREE.Math.degToRad(camera.fov * 0.5);
-				const halfFov = camera.fov;
-				const distance = halfSizeModel / Math.tan(halfFov);
-				const direction = (new THREE.Vector3()).subVectors(
-					camera.position, centerBox).normalize();
-				const position = direction.multiplyScalar(distance).add(centerBox);
-
-				camera.position.copy(position);
-				camera.near = sizeBox / 100;
-				camera.far = sizeBox * 100;
-
-				camera.updateProjectionMatrix();
-
-				camera.lookAt(centerBox.x, centerBox.y, centerBox.z);
-				// this._controls.target.set(centerBox.x, centerBox.y, centerBox.z);
-			}  
 
 			function animate() {
 
