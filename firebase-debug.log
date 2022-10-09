@@ -1,0 +1,103 @@
+[debug] [2022-10-08T14:54:57.206Z] ----------------------------------------------------------------------
+[debug] [2022-10-08T14:54:57.207Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sligh\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2022-10-08T14:54:57.207Z] CLI Version:   11.14.1
+[debug] [2022-10-08T14:54:57.207Z] Platform:      win32
+[debug] [2022-10-08T14:54:57.207Z] Node Version:  v16.17.1
+[debug] [2022-10-08T14:54:57.208Z] Time:          Sat Oct 08 2022 23:54:57 GMT+0900 (대한민국 표준시)
+[debug] [2022-10-08T14:54:57.209Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-10-08T14:54:57.268Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-10-08T14:54:57.268Z] > authorizing via signed-in user (slights105@gmail.com)
+[debug] [2022-10-08T14:54:57.268Z] [iam] checking project three-js-8dcde for permissions ["firebase.projects.get"]
+[debug] [2022-10-08T14:54:57.270Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/three-js-8dcde:testIamPermissions [none]
+[debug] [2022-10-08T14:54:57.272Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/three-js-8dcde:testIamPermissions x-goog-quota-user=projects/three-js-8dcde
+[debug] [2022-10-08T14:54:57.272Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/three-js-8dcde:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-10-08T14:54:58.181Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/three-js-8dcde:testIamPermissions 200
+[debug] [2022-10-08T14:54:58.181Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/three-js-8dcde:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-10-08T14:54:58.181Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde [none]
+[debug] [2022-10-08T14:54:58.675Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde 200
+[debug] [2022-10-08T14:54:58.675Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde {"projectId":"three-js-8dcde","projectNumber":"881561686603","displayName":"Three-js","name":"projects/three-js-8dcde","resources":{"hostingSite":"three-js-8dcde","storageBucket":"three-js-8dcde.appspot.com","locationId":"asia-northeast3"},"state":"ACTIVE","etag":"1_92430a30-05b2-4d44-86a3-d5bfa792bf3b"}
+[info] 
+[info] === Serving from 'D:\2_Coding\THREE_JS'...
+[info] 
+[info] +  functions: Using node@16 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Using node@16 from host."}}
+[info] +  functions: Using node@16 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Using node@16 from host."}}
+[debug] [2022-10-08T14:54:58.722Z] defaultcredentials: writing to file C:\Users\sligh\AppData\Roaming\firebase\slights105_gmail_com_application_default_credentials.json
+[debug] [2022-10-08T14:54:58.724Z] Setting GAC to C:\Users\sligh\AppData\Roaming\firebase\slights105_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\sligh\\AppData\\Roaming\\firebase\\slights105_gmail_com_application_default_credentials.json"}}
+[debug] [2022-10-08T14:54:58.725Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde/adminSdkConfig [none]
+[debug] [2022-10-08T14:54:59.228Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde/adminSdkConfig 200
+[debug] [2022-10-08T14:54:59.228Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/three-js-8dcde/adminSdkConfig {"projectId":"three-js-8dcde","storageBucket":"three-js-8dcde.appspot.com","locationId":"asia-northeast3"}
+[info] i  functions: Watching "D:\2_Coding\THREE_JS\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"D:\\2_Coding\\THREE_JS\\functions\" for Cloud Functions..."}}
+[debug] [2022-10-08T14:54:59.240Z] Validating nodejs source
+[debug] [2022-10-08T14:55:01.571Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[debug] [2022-10-08T14:55:01.571Z] Building nodejs source
+[debug] [2022-10-08T14:55:01.571Z] Analyzing nodejs backend spec
+[debug] [2022-10-08T14:55:01.573Z] Could not find functions.yaml. Must use http discovery
+[debug] [2022-10-08T14:55:01.797Z] Serving at port 9005
+
+[debug] [2022-10-08T14:55:01.857Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2022-10-08T14:55:01.862Z] shutdown requested via /__/quitquitquit
+
+[info] +  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}
+[info] i  functions: Watching "D:\2_Coding\THREE_JS\html" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"D:\\2_Coding\\THREE_JS\\html\" for Cloud Functions..."}}
+[debug] [2022-10-08T14:55:01.871Z] Validating nodejs source
+[debug] [2022-10-08T14:55:04.121Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[debug] [2022-10-08T14:55:04.121Z] Building nodejs source
+[debug] [2022-10-08T14:55:04.121Z] Analyzing nodejs backend spec
+[debug] [2022-10-08T14:55:04.121Z] Could not find functions.yaml. Must use http discovery
+[debug] [2022-10-08T14:55:04.340Z] Serving at port 9005
+
+[debug] [2022-10-08T14:55:04.400Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2022-10-08T14:55:04.404Z] shutdown requested via /__/quitquitquit
+
+[info] +  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}

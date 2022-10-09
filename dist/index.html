@@ -5,8 +5,92 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="index.css">
+		<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 	</head>
 	<body>
+		<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+
+		<!-- <script type="module" src="index.js" defer></script> -->
+
+		<script>
+			// import { initializeApp } from 'firebase/app';
+			// import { storage } from 'firebase/storage';
+
+			// TODO: Replace the following with your app's Firebase project configuration
+			// See: https://firebase.google.com/docs/web/learn-more#config-object
+			var firebaseConfig = {
+			apiKey: "AIzaSyANeqdntumVrYAvF_R2Xu9JcqNEZJ050hA",
+			authDomain: "three-js-8dcde.firebaseapp.com",
+			projectId: "three-js-8dcde",
+			storageBucket: "three-js-8dcde.appspot.com",
+			messagingSenderId: "881561686603",
+			appId: "1:881561686603:web:74259697900647726573ce",
+			measurementId: "G-SCKV5VZ658"
+			};
+
+			// Initialize Firebase
+			firebase.initializeApp(firebaseConfig);
+
+			// Initialize Cloud Storage and get a reference to the service
+
+			// const storage = getStorage(app);
+		</script>
+		<input type="file" id="collada">
+		<button id="bt">업로드</button>
+		<script id="colladaurl">
+			const storage = firebase.storage();
+
+			$('#bt').click(function(){
+				const file = document.querySelector('#collada').files[0];
+
+				const StorageRef = storage.ref();
+				const 저장할경로 = StorageRef.child('collada/' + file.name);
+				const 업로드작업 = 저장할경로.put(file)
+
+				업로드작업.on( 'state_changed', 
+    			// 변화시 동작하는 함수 
+				null, 
+				//에러시 동작하는 함수
+				(error) => {
+				console.error('실패사유는', error);
+				}, 
+				// 성공시 동작하는 함수
+				() => {
+				업로드작업.snapshot.ref.getDownloadURL().then((url) => {
+				console.log(url);
+				const db = firebase.firestore();
+				db.collection('object').doc('collada').set({ adress : url})
+				});
+				}
+				);
+			}
+			)
+		</script>
+		
+		<!-- <input type="text" id="title" >
+		<div>
+			<h1 id="title2">주소</h1>
+		</div>
+
+		<script>
+				const db = firebase.firestore();
+				const dbtest = db.collection('object').doc('collada').get();
+				db.collection('object').doc('collada').get().then((doc) => {
+								$('#title').val(doc.data().adress)	
+								$('#title2').html(doc.data().adress)	
+								console.log(doc.data().adress)
+								this.ttt= doc.data().adress
+								})
+				console.log(this.ttt)
+		</script>
+
+		<script>
+			var anText_sub1 = $('#title2').html();
+			console.log(anText_sub1)
+		</script> -->
 
 		<!-- Import maps polyfill -->
 		<!-- Remove this when import maps will be widely supported -->
@@ -34,6 +118,8 @@
 			animate();
 			zoomFit();
 
+
+					
 			function init() {
                 scene = new THREE.Scene();
 
@@ -98,12 +184,21 @@
 					
 
                        } );
+					   
 
-                const loader = new ColladaLoader(loadingManager );
-                      loader.load('TEST.dae', function ( collada ) {
+				const db = firebase.firestore();
+				const dbtest = db.collection('object').doc('collada').get();
+				// $('#bt').click(function(){})
+				db.collection('object').doc('collada').get().then((doc) => {
+
+				var geturl = doc.data().adress;
+				// console.log(geturl);
+
+				const loader = new ColladaLoader(loadingManager );
+                      loader.load(geturl, function ( collada ) {
                          building = collada.scene;
                          });
-
+						})
 
 				
 				const grid = new THREE.GridHelper( 100, 10, 0x000000, 0x000000 );
@@ -115,7 +210,7 @@
 				
 						 	
 			}
-
+		
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -139,6 +234,8 @@
 			}
 
 		</script>
+
+
 
 	</body>
 </html>

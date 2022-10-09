@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "firebase": "^9.11.0",
+    "firebase-tools": "^11.14.1",
+    "firespace": "^1.0.0",
     "gh-pages": "^4.0.0"
   }
 }
